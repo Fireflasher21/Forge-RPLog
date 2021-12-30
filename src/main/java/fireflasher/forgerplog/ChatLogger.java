@@ -24,14 +24,7 @@ public class ChatLogger {
     public void ChatEvent(ClientChatReceivedEvent event){
         String chat =  event.getMessage().getString();
 
-        List<String> Channellist = new ArrayList<>();
-        Channellist.add("[Flüstern]");
-        Channellist.add("[Leise]");
-        Channellist.add("[Reden]");
-        Channellist.add("[Rufen]");
-        Channellist.add("[PRufen]");
-        Channellist.add("[Schreien]");
-
+        List<String> Channellist = new DefaultConfig().getList();
 
         for(String Channel:Channellist){
             if(chat.contains(Channel)){
@@ -45,7 +38,7 @@ public class ChatLogger {
 
         LocalDateTime today = LocalDateTime.now();
         String date = today.format(DATE);
-        String Path = RPLog.getFolder() + "/RPLogs";
+        String Path = Forgerplog.getFolder() + "/RPLogs";
         String Filename = date + ".txt";
         log = new File(Path, Filename);
         if(!log.exists()){
@@ -96,13 +89,17 @@ public class ChatLogger {
     private void addMessage(String chat){
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(log, true));
+            BufferedReader br = new BufferedReader(new FileReader(log));
             LocalDateTime date = LocalDateTime.now();
             if ( !log.toString().contains(date.format(DATE))){setup();}
 
             String time = date.format(TIME);
             time = "["+ time +"] ";
-            String message = "\n" + time + chat;
-            bw.append(message);
+            String message =time + chat;
+
+            br.read();
+            if(br.lines().toList().isEmpty()) bw.append(message);
+            else bw.append("\n" + message);
             bw.close();
         } catch (IOException e) {
             LOGGER.warn("RPLog konnte nicht in " + log.toString() + " schreiben");

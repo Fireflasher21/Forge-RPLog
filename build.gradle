@@ -12,12 +12,12 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 
 group = 'Fireflasher'
-version = '2.0'
+version = '3.0'
 
 compileJava.options.encoding = 'UTF-8'
 
 java {
-    archivesBaseName = 'RPLog'
+    archivesBaseName = 'Forgerplog'
     toolchain.languageVersion = JavaLanguageVersion.of(16)
 }
 

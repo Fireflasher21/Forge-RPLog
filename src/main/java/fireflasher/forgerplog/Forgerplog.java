@@ -12,18 +12,19 @@ import org.apache.logging.log4j.Logger;
 
 
 @Mod("rplog")
-public class RPLog {
+public class Forgerplog {
 
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public RPLog() {
+    public Forgerplog() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
         MinecraftForge.EVENT_BUS.register(new ChatLogger());
 
         MinecraftForge.EVENT_BUS.register(this);
 
+        new DefaultConfig().setup();
         ChatLogger.setup();
     }
 
@@ -32,4 +33,5 @@ public class RPLog {
     private void doClientStuff(final FMLClientSetupEvent event){}
 
     protected static String getFolder(){ return FMLPaths.GAMEDIR.get().toString(); }
+    protected static String getConfigFolder(){ return FMLPaths.CONFIGDIR.get().toString() + "/RPLog/"; }
 }
