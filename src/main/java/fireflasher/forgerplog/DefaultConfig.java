@@ -17,7 +17,7 @@ public class DefaultConfig {
     private static final Logger LOGGER = LogManager.getLogger();
 
     public void reloadConfig() {
-        if (this.ConfigFile == null) {
+        if (this.ConfigFile == null || !this.ConfigFile.exists()) {
             this.ConfigFile = new File( ModsDir, "config.yml");
             try {
                 ConfigFile.createNewFile();
@@ -79,7 +79,7 @@ public class DefaultConfig {
         this.ConfigFile = new File(ModsDir + "config.yml");
         if (ConfigFile.exists()) {
             LOGGER.info("Config erfolgreich geladen");
-
+            reloadConfig();
         } else {
             reloadConfig();
             saveConfig();

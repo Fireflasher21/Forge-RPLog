@@ -19,12 +19,11 @@ public class ChatLogger {
     private static File log;
     public static final DateTimeFormatter DATE  = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     public static final DateTimeFormatter TIME  = DateTimeFormatter.ofPattern("HH:mm:ss");
+    private static List<String> Channellist = new DefaultConfig().getList();
 
     @SubscribeEvent
     public void ChatEvent(ClientChatReceivedEvent event){
         String chat =  event.getMessage().getString();
-
-        List<String> Channellist = new DefaultConfig().getList();
 
         for(String Channel:Channellist){
             if(chat.contains(Channel)){
