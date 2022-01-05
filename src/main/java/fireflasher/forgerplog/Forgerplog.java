@@ -16,16 +16,21 @@ public class Forgerplog {
 
 
     private static final Logger LOGGER = LogManager.getLogger();
+    public static DefaultConfig CONFIG = new DefaultConfig();
+    public static ChatLogger CHATLOGGER;
 
     public Forgerplog() {
+        CONFIG.setup();
+
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
-        MinecraftForge.EVENT_BUS.register(new ChatLogger());
+
+        CHATLOGGER = new ChatLogger();
+        CHATLOGGER.setup();
 
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(CHATLOGGER);
 
-        new DefaultConfig().setup();
-        ChatLogger.setup();
     }
 
     private void setup(final FMLCommonSetupEvent event) {}

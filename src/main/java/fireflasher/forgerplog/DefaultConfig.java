@@ -12,9 +12,16 @@ public class DefaultConfig {
 
     String ModsDir = Forgerplog.getConfigFolder();
     private File ConfigFile = null;
-    private final List<String> Keywords = new ArrayList<>();
+    private List<String> Keywords = new ArrayList<>();
 
     private static final Logger LOGGER = LogManager.getLogger();
+
+    public void DefaultConfig(){
+        this.ConfigFile = new File(ModsDir, "config.yml");
+        if(!Keywords.isEmpty()){
+            this.Keywords = Keywords;
+        }
+    }
 
     public void reloadConfig() {
         if (this.ConfigFile == null || !this.ConfigFile.exists()) {
@@ -64,7 +71,7 @@ public class DefaultConfig {
 
                 br.read();
                 if(br.lines().toList().isEmpty()) bw.append(write);
-                else bw.append("\n" + write);
+                else bw.append("\n").append(write);
                 bw.close();
             }
         } catch (IOException e) {

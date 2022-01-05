@@ -19,7 +19,7 @@ public class ChatLogger {
     private static File log;
     public static final DateTimeFormatter DATE  = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     public static final DateTimeFormatter TIME  = DateTimeFormatter.ofPattern("HH:mm:ss");
-    private static List<String> Channellist = new DefaultConfig().getList();
+    private static List<String> Channellist = Forgerplog.CONFIG.getList();
 
     @SubscribeEvent
     public void ChatEvent(ClientChatReceivedEvent event){
@@ -33,7 +33,7 @@ public class ChatLogger {
 
     }
 
-    protected static void setup() {
+    protected void setup() {
 
         LocalDateTime today = LocalDateTime.now();
         String date = today.format(DATE);
@@ -98,7 +98,7 @@ public class ChatLogger {
 
             br.read();
             if(br.lines().toList().isEmpty()) bw.append(message);
-            else bw.append("\n" + message);
+            else bw.append("\n").append(message);
             bw.close();
         } catch (IOException e) {
             LOGGER.warn("RPLog konnte nicht in " + log.toString() + " schreiben");
