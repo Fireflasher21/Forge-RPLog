@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 public class Forgerplog {
 
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    protected static final Logger LOGGER = LogManager.getLogger("ForgeRPLog");
     public static DefaultConfig CONFIG = new DefaultConfig();
     public static ChatLogger CHATLOGGER;
 

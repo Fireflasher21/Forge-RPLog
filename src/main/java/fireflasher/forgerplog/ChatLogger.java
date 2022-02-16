@@ -15,11 +15,12 @@ import java.util.zip.ZipOutputStream;
 
 public class ChatLogger {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = Forgerplog.LOGGER;
     private static File log;
     public static final DateTimeFormatter DATE  = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     public static final DateTimeFormatter TIME  = DateTimeFormatter.ofPattern("HH:mm:ss");
     private static List<String> Channellist = Forgerplog.CONFIG.getList();
+    private static String timedmessage = "";
 
     @SubscribeEvent
     public void ChatEvent(ClientChatReceivedEvent event){
@@ -92,14 +93,19 @@ public class ChatLogger {
             LocalDateTime date = LocalDateTime.now();
             if ( !log.toString().contains(date.format(DATE))){setup();}
 
-            String time = date.format(TIME);
-            time = "["+ time +"] ";
-            String message =time + chat;
+            String time = "[" + date.format(TIME) + "] ";
+            String message = time + chat;
 
             br.read();
             if(br.lines().toList().isEmpty()) bw.append(message);
-            else bw.append("\n").append(message);
+            else {
+                if (timedmessage.equalsIgnoreCase(chat)) ;
+                else bw.append("\n" + message);
+            }
             bw.close();
+
+            timedmessage = chat;
+
         } catch (IOException e) {
             LOGGER.warn("RPLog konnte nicht in " + log.toString() + " schreiben");
         }

@@ -14,7 +14,7 @@ public class DefaultConfig {
     private File ConfigFile = null;
     private List<String> Keywords = new ArrayList<>();
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger("ForgeRPLog Config");
 
     public void DefaultConfig(){
         this.ConfigFile = new File(ModsDir, "config.yml");
