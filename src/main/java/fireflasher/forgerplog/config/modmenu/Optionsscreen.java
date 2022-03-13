@@ -1,24 +1,22 @@
 package fireflasher.forgerplog.config.modmenu;
 
 import com.mojang.authlib.minecraft.client.MinecraftClient;
+import com.mojang.blaze3d.vertex.PoseStack;
 import fireflasher.forgerplog.ChatLogger;
 import fireflasher.forgerplog.Forgerplog;
 import fireflasher.forgerplog.config.DefaultConfig;
 import fireflasher.forgerplog.config.json.ServerConfig;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.components.;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.fml.loading.targets.FMLClientDevLaunchHandler;
-import net.minecraftforge.fml.loading.targets.FMLClientLaunchHandler;
 
 import java.util.List;
 
 public class Optionsscreen extends Screen {
 
     private Screen previous;
-    static final int CLICKABLEWIDGETHEIGHT = 20;
+    static final int BUTTON_HEIGHT = 20;
     private final ServerConfig dummy = new ServerConfig("dummy", List.of("dummy"), List.of("dummy"));
 
 
@@ -26,6 +24,7 @@ public class Optionsscreen extends Screen {
     public Optionsscreen() {
         super(Component.nullToEmpty("RPlog Options"));
     }
+
     public Optionsscreen(Screen previous) {
         super(Component.nullToEmpty("RPlog Options"));
         this.previous = previous;
@@ -42,13 +41,13 @@ public class Optionsscreen extends Screen {
         }
         for (ServerConfig server : serverConfigList) {
             i = i + 30;
-            Button serverbutton = new Button(this.width / 2 - this.width / 4 - 50, i, 100, CLICKABLEWIDGETHEIGHT, Component.nullToEmpty(ChatLogger.getServerNameShortener(server.getServerDetails().getServerNames())),
+            Button serverbutton = new Button(this.width / 2 - this.width / 4 - 50, i, 100, BUTTON_HEIGHT, Component.nullToEmpty(ChatLogger.getServerNameShortener(server.getServerDetails().getServerNames())),
                     button -> {
                             Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, server));
             });
 
 
-            Button delete = new Button(this.width / 2 + this.width / 4 - serverbutton.getWidth() / 2, i, serverbutton.getWidth(), CLICKABLEWIDGETHEIGHT, Component.nullToEmpty("Löschen"),
+            Button delete = new Button(this.width / 2 + this.width / 4 - serverbutton.getWidth() / 2, i, serverbutton.getWidth(), BUTTON_HEIGHT, Component.nullToEmpty("Löschen"),
                     button -> {
                             Minecraft.getInstance().setScreen(new Verification(Minecraft.getInstance().screen, defaultConfig, server));
                 });
@@ -58,7 +57,7 @@ public class Optionsscreen extends Screen {
         }
         serverConfigList.remove(dummy);
 
-        Button addServer = new Button(this.width / 2 - this.width / 4 - 50, 30, 100, CLICKABLEWIDGETHEIGHT, Component.nullToEmpty("Server Hinzufügen"),
+        Button addServer = new Button(this.width / 2 - this.width / 4 - 50, 30, 100, BUTTON_HEIGHT, Component.nullToEmpty("Server Hinzufügen"),
                 button ->{
                 if (Minecraft.getInstance().getCurrentServer() == null || Minecraft.getInstance().getCurrentServer().isLan()) {
                 } else {
@@ -73,27 +72,28 @@ public class Optionsscreen extends Screen {
             });
 
 
-        Button done = new Button(this.width / 2 + this.width / 4 - addServer.getWidth() / 2, 30, addServer.getWidth(), CLICKABLEWIDGETHEIGHT, Component.nullToEmpty("Done"),
+        Button done = new Button(this.width / 2 + this.width / 4 - addServer.getWidth() / 2, 30, addServer.getWidth(), BUTTON_HEIGHT, Component.nullToEmpty("Done"),
                 button -> {
                         onClose();
                         defaultConfig.loadConfig();
         });
 
-        Button defaultconfigbutton = new Button(this.width / 2 + - 30 , 30, 60, CLICKABLEWIDGETHEIGHT, Component.nullToEmpty("Defaults"),
+        Button defaultconfigbutton = new Button(this.width / 2 + - 30 , 30, 60, BUTTON_HEIGHT, Component.nullToEmpty("Defaults"),
                 button ->{
                 ServerConfig defaults = new ServerConfig("Defaults",List.of("Defaults"),Forgerplog.CONFIG.getKeywords());
                 Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, defaults));
             });
     }
 
-    public void render(int mouseX, int mouseY, float partialTicks) {
+
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         String serverlist = "Konfigurierbare Server";
         String deleteServer = "Server löschen";
-        this.renderBackground(null);
-        drawCenteredString(null,this.font, this.title.toString(), this.width / 2, 5, 0xffffff);
-        drawCenteredString(null, this.font, serverlist, this.width / 2 - this.width / 4, 60, 0xffffff);
-        drawCenteredString(null, this.font, deleteServer, this.width / 2 + this.width / 4, 60, 0xffffff);
-        super.render(mouseX,mouseY,partialTicks));
+        this.renderBackground(poseStack);
+        drawCenteredString(poseStack,this.font, this.title.toString(), this.width / 2, 5, 0xffffff);
+        drawCenteredString(poseStack, this.font, serverlist, this.width / 2 - this.width / 4, 60, 0xffffff);
+        drawCenteredString(poseStack, this.font, deleteServer, this.width / 2 + this.width / 4, 60, 0xffffff);
+        super.render(poseStack, mouseX,mouseY,partialTicks);
     }
 
     @Override
@@ -116,46 +116,30 @@ public class Optionsscreen extends Screen {
         }
 
         public void init(){
-            ClickableWidget delete = new ClickableWidget(this.width / 2 - this.width / 4 - 50, this.height / 2, 100, CLICKABLEWIDGETHEIGHT, Text.of("Ja")) {
-                @Override
-                public void appendNarrations(NarrationMessageBuilder builder) {
-                    return;
-                }
-
-                @Override
-                public void onClick(double mouseX, double mouseY) {
+            Button delete = new Button(this.width / 2 - this.width / 4 - 50, this.height / 2, 100, BUTTON_HEIGHT, Component.nullToEmpty("Ja"),
+                    button -> {
                     defaultConfig.removeServerFromList(serverConfig);
-                    MinecraftClient.getInstance().setScreenAndRender(new Optionsscreen(previous));
-                }
-            };
+                    Minecraft.getInstance().setScreen(new Optionsscreen(previous));
+                });
 
 
-            ClickableWidget abort = new ClickableWidget(this.width / 2 + this.width / 4 - 50, this.height / 2,100, CLICKABLEWIDGETHEIGHT, Text.of("Nein")) {
-                @Override
-                public void appendNarrations(NarrationMessageBuilder builder) {
-                    return;
-                }
+            Button abort = new Button(this.width / 2 + this.width / 4 - 50, this.height / 2,100, BUTTON_HEIGHT, Component.nullToEmpty("Nein"),
+                    button -> {
+                        onClose();
 
-                @Override
-                public void onClick(double mouseX, double mouseY) {
-                    onClose();
-                }
-            };
-
-            this.addDrawableChild(delete);
-            this.addDrawableChild(abort);
+            });
 
         }
 
-        public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-            this.renderBackground(matrices);
-            drawCenteredText(matrices, this.textRenderer, Text.of("Bist du sicher, dass du den Server löschen willst?"), this.width / 2, this.height / 2 - this.height / 4, 0xffffff);
-            super.render(matrices, mouseX, mouseY, delta);
+        public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
+            this.renderBackground(poseStack);
+            drawCenteredString(poseStack, this.font, Component.nullToEmpty("Bist du sicher, dass du den Server löschen willst?"), this.width / 2, this.height / 2 - this.height / 4, 0xffffff);
+            super.render(poseStack, mouseX, mouseY, delta);
         }
 
         @Override
         public void onClose(){
-            this.client.setScreen(previous);
+            this.minecraft.setScreen(previous);
         }
 
     }

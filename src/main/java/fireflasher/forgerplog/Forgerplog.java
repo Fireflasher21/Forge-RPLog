@@ -2,6 +2,9 @@ package fireflasher.forgerplog;
 
 import fireflasher.forgerplog.config.DefaultConfig;
 import fireflasher.forgerplog.config.modmenu.Optionsscreen;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -12,8 +15,9 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.function.BiFunction;
 
-import net.minecraftforge.fml;
+
 @Mod("forgerplog")
 public class Forgerplog {
 
@@ -34,18 +38,21 @@ public class Forgerplog {
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(CHATLOGGER);
 
-        Object ExtensionPoint = ;
-        ModLoadingContext.get().registerExtensionPoint(
-                ExtensionPoint.CONFIGGUIFACTORY,
-                () -> (mc, screen) -> new Optionsscreen()
-        );
 
+        ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
+                () -> new ConfigGuiHandler.ConfigGuiFactory(new BiFunction<Minecraft, Screen, Screen>() {
+                    @Override
+                    public Screen apply(Minecraft mc, Screen screen) {
+                        return new Optionsscreen();
+                    }
+                }));
     }
+
 
     private void setup(final FMLCommonSetupEvent event) {}
 
     private void doClientStuff(final FMLClientSetupEvent event){}
 
-    protected static String getFolder(){ return FMLPaths.GAMEDIR.get().toString(); }
+    protected static String getFolder(){ return FMLPaths.GAMEDIR.get().toString() + "/RPLog/"; }
     public static String getConfigFolder(){ return FMLPaths.CONFIGDIR.get().toString() + "/"; }
 }
