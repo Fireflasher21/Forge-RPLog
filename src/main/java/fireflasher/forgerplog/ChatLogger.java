@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -109,5 +111,28 @@ public class ChatLogger {
         } catch (IOException e) {
             LOGGER.warn("RPLog konnte nicht in " + log.toString() + " schreiben");
         }
+    }
+
+    public static String getServerNameShortener(List<String> namelist){
+        int[] lenght = new int[2];
+        lenght[0] = namelist.get(0).length();
+        if(namelist.size() != 1){
+            for(String name:namelist){
+                if(lenght[0] > name.length()){
+                    lenght[0] = name.length();
+                    lenght[1] = namelist.indexOf(name);
+                }
+            }
+        }
+        String name = namelist.get(lenght[1]);
+        Pattern pattern = Pattern.compile("\\.");
+        Matcher match = pattern.matcher(name);
+        int count = 0;
+        while( match.find()){
+            count++;
+        }
+        if(count > 1) name = name.split("\\.",2)[1];
+        name = name.split("\\.")[0];
+        return name;
     }
 }
