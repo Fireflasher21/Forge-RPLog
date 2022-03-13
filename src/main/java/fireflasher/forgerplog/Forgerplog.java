@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.function.BiFunction;
 
-
+// The value here should match an entry in the META-INF/mods.toml file
 @Mod("forgerplog")
 public class Forgerplog {
 
@@ -50,7 +50,6 @@ public class Forgerplog {
 
 
     private void setup(final FMLCommonSetupEvent event) {}
-
     private void doClientStuff(final FMLClientSetupEvent event){}
 
     protected static String getFolder(){ return FMLPaths.GAMEDIR.get().toString() + "/RPLog/"; }

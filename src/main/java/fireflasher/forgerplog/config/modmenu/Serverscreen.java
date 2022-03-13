@@ -35,26 +35,29 @@ class Serverscreen extends Screen {
 
         Button reset = new Button(this.width / 2 - this.width / 4 - 50, i, 100, CLICKABLEWIDGETHEIGHT, Component.nullToEmpty("Reset Defaults"),
                 button ->{
-                serverConfig.getServerDetails().getServerKeywords().clear();
-                serverConfig.getServerDetails().getServerKeywords().addAll(DefaultConfig.defaultKeywords);
-                Minecraft.getInstance().setScreen(new Serverscreen(previous, serverConfig));
-            });
+                    serverConfig.getServerDetails().getServerKeywords().clear();
+                    serverConfig.getServerDetails().getServerKeywords().addAll(DefaultConfig.defaultKeywords);
+                    Minecraft.getInstance().setScreen(new Serverscreen(previous, serverConfig));
+                });
 
         Button done = new Button(this.width / 2 + this.width / 4 - reset.getWidth() / 2 , i, reset.getWidth(), CLICKABLEWIDGETHEIGHT, Component.nullToEmpty("Done"),
                 button -> {
-                Forgerplog.CONFIG.saveConfig();
-                onClose();
-            });
+                    Forgerplog.CONFIG.saveConfig();
+                    onClose();
+                });
+
+        this.addRenderableWidget(reset);
+        this.addRenderableWidget(done);
 
         for (String keyword : keywords) {
             i = i + 30;
             Button delete = new Button(this.width / 2 + this.width / 4 - reset.getWidth() / 2, i, reset.getWidth(), CLICKABLEWIDGETHEIGHT, Component.nullToEmpty("Löschen"),
                     button ->{
-                    keywords.remove(keyword);
-                    serverConfig.setServerDetails(serverDetails);
-                    Minecraft.getInstance().setScreen(new Serverscreen(previous, serverConfig));
-                });
-
+                        keywords.remove(keyword);
+                        serverConfig.setServerDetails(serverDetails);
+                        Minecraft.getInstance().setScreen(new Serverscreen(previous, serverConfig));
+                    });
+            this.addRenderableWidget(delete);
         }
 
         i = i + 30;
@@ -65,14 +68,17 @@ class Serverscreen extends Screen {
         Button add = new Button(this.width / 2 + this.width / 4 - insert.getWidth() / 2, i, insert.getWidth(), CLICKABLEWIDGETHEIGHT, Component.nullToEmpty("Add"),
                 button ->{
 
-                if (!insert.getValue().isEmpty()) {
-                    keywords.add(insert.getValue());
-                    serverConfig.setServerDetails(serverDetails);
-                    Minecraft.getInstance().setScreen(new Serverscreen(previous, serverConfig));
-                }
+                    if (!insert.getValue().isEmpty()) {
+                        keywords.add(insert.getValue());
+                        serverConfig.setServerDetails(serverDetails);
+                        Minecraft.getInstance().setScreen(new Serverscreen(previous, serverConfig));
+                    }
 
-            });
-        }
+                });
+
+        this.addRenderableWidget(insert);
+        this.addRenderableWidget(add);
+    }
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {

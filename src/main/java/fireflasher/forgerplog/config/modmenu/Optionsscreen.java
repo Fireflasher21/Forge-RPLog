@@ -1,6 +1,5 @@
 package fireflasher.forgerplog.config.modmenu;
 
-import com.mojang.authlib.minecraft.client.MinecraftClient;
 import com.mojang.blaze3d.vertex.PoseStack;
 import fireflasher.forgerplog.ChatLogger;
 import fireflasher.forgerplog.Forgerplog;
@@ -43,46 +42,52 @@ public class Optionsscreen extends Screen {
             i = i + 30;
             Button serverbutton = new Button(this.width / 2 - this.width / 4 - 50, i, 100, BUTTON_HEIGHT, Component.nullToEmpty(ChatLogger.getServerNameShortener(server.getServerDetails().getServerNames())),
                     button -> {
-                            Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, server));
-            });
+                        Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, server));
+                    });
 
 
             Button delete = new Button(this.width / 2 + this.width / 4 - serverbutton.getWidth() / 2, i, serverbutton.getWidth(), BUTTON_HEIGHT, Component.nullToEmpty("Löschen"),
                     button -> {
-                            Minecraft.getInstance().setScreen(new Verification(Minecraft.getInstance().screen, defaultConfig, server));
-                });
+                        Minecraft.getInstance().setScreen(new Verification(Minecraft.getInstance().screen, defaultConfig, server));
+                    });
 
             if (!serverConfigList.contains(dummy)) {
+                this.addRenderableWidget(serverbutton);
+                this.addRenderableWidget(delete);
             }
         }
         serverConfigList.remove(dummy);
 
         Button addServer = new Button(this.width / 2 - this.width / 4 - 50, 30, 100, BUTTON_HEIGHT, Component.nullToEmpty("Server Hinzufügen"),
                 button ->{
-                if (Minecraft.getInstance().getCurrentServer() == null || Minecraft.getInstance().getCurrentServer().isLan()) {
-                } else {
-                    String ip1 = Minecraft.getInstance().getCurrentServer().ip;
-                    String servername1 = Minecraft.getInstance().getCurrentServer().name;
-                    String ip = ip1.split("/")[1];
-                    String servername = servername1.toString().split("/")[0];
-                    ip = ip.split(":")[0];
-                    defaultConfig.addServerToList(ip, servername);
-                    Minecraft.getInstance().setScreen(new Optionsscreen(previous));
-                }
-            });
+                    if (Minecraft.getInstance().getCurrentServer() == null || Minecraft.getInstance().getCurrentServer().isLan()) {
+                    } else {
+                        String ip1 = Minecraft.getInstance().getCurrentServer().ip;
+                        String servername1 = Minecraft.getInstance().getCurrentServer().name;
+                        String ip = ip1.split("/")[1];
+                        String servername = servername1.toString().split("/")[0];
+                        ip = ip.split(":")[0];
+                        defaultConfig.addServerToList(ip, servername);
+                        Minecraft.getInstance().setScreen(new Optionsscreen(previous));
+                    }
+                });
 
 
         Button done = new Button(this.width / 2 + this.width / 4 - addServer.getWidth() / 2, 30, addServer.getWidth(), BUTTON_HEIGHT, Component.nullToEmpty("Done"),
                 button -> {
-                        onClose();
-                        defaultConfig.loadConfig();
-        });
+                    onClose();
+                    defaultConfig.loadConfig();
+                });
 
         Button defaultconfigbutton = new Button(this.width / 2 + - 30 , 30, 60, BUTTON_HEIGHT, Component.nullToEmpty("Defaults"),
                 button ->{
-                ServerConfig defaults = new ServerConfig("Defaults",List.of("Defaults"),Forgerplog.CONFIG.getKeywords());
-                Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, defaults));
-            });
+                    ServerConfig defaults = new ServerConfig("Defaults",List.of("Defaults"),Forgerplog.CONFIG.getKeywords());
+                    Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, defaults));
+                });
+
+        this.addRenderableWidget(addServer);
+        this.addRenderableWidget(done);
+        this.addRenderableWidget(defaultconfigbutton);
     }
 
 
@@ -90,7 +95,7 @@ public class Optionsscreen extends Screen {
         String serverlist = "Konfigurierbare Server";
         String deleteServer = "Server löschen";
         this.renderBackground(poseStack);
-        drawCenteredString(poseStack,this.font, this.title.toString(), this.width / 2, 5, 0xffffff);
+        drawCenteredString(poseStack,this.font, this.title, this.width / 2, 5, 0xffffff);
         drawCenteredString(poseStack, this.font, serverlist, this.width / 2 - this.width / 4, 60, 0xffffff);
         drawCenteredString(poseStack, this.font, deleteServer, this.width / 2 + this.width / 4, 60, 0xffffff);
         super.render(poseStack, mouseX,mouseY,partialTicks);
@@ -118,16 +123,19 @@ public class Optionsscreen extends Screen {
         public void init(){
             Button delete = new Button(this.width / 2 - this.width / 4 - 50, this.height / 2, 100, BUTTON_HEIGHT, Component.nullToEmpty("Ja"),
                     button -> {
-                    defaultConfig.removeServerFromList(serverConfig);
-                    Minecraft.getInstance().setScreen(new Optionsscreen(previous));
-                });
+                        defaultConfig.removeServerFromList(serverConfig);
+                        Minecraft.getInstance().setScreen(new Optionsscreen(previous));
+                    });
 
 
             Button abort = new Button(this.width / 2 + this.width / 4 - 50, this.height / 2,100, BUTTON_HEIGHT, Component.nullToEmpty("Nein"),
                     button -> {
                         onClose();
 
-            });
+                    });
+
+            this.addRenderableWidget(delete);
+            this.addRenderableWidget(abort);
 
         }
 
