@@ -4,6 +4,7 @@ package fireflasher.forgerplog;
 import fireflasher.forgerplog.config.DefaultConfig;
 import fireflasher.forgerplog.config.json.ServerConfig;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.Logger;
@@ -104,7 +105,7 @@ public class ChatLogger {
                             if(new File(filename).exists()) fileToZip.delete();
                         }
                         catch (IOException e){
-                            LOGGER.warn("RPLOG Datei konnte nicht verpackt werden");
+                            LOGGER.warn(new TranslatableComponent("rplog.logger.chatlogger.zip_warning"));
                         }
                     }
                 }
@@ -126,7 +127,7 @@ public class ChatLogger {
                     path.mkdir();
                     log.createNewFile();
                 } catch (IOException e) {
-                    LOGGER.warn("RPLOG Datei " + log.toString() + " konnte nicht erstellt werden");
+                    LOGGER.warn(new TranslatableComponent("rplog.logger.chatlogger.creation_warning") + log.toString());
                     error = true;
                 }
             }
@@ -148,7 +149,7 @@ public class ChatLogger {
             timedmessage = chat;
 
         } catch (IOException e) {
-            LOGGER.warn("RPLog konnte nicht in " + log.toString() + " schreiben");
+            LOGGER.warn(new TranslatableComponent("rplog.logger.chatlogger.write_warning") + log.toString());
         }
     }
 
