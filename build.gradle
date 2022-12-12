@@ -2,18 +2,21 @@ buildscript {
     repositories {
         // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
         maven { url = 'https://maven.minecraftforge.net' }
+        maven { url = 'https://repo.spongepowered.org' }
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-
+        // MixinGradle:
+        classpath 'org.spongepowered:mixingradle:0.7.+'
     }
 }
 
 apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
 
 group = 'fireflasher'
-version = '4.0'
+version = '4.2'
 
 compileJava.options.encoding = 'UTF-8'
 
@@ -144,6 +147,12 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     implementation 'com.google.code.gson:gson:2.8.6'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
+
+mixin {
+    config 'forgerplog.mixin.json'
+
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
