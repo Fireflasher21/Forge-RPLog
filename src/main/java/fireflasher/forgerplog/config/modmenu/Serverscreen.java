@@ -34,14 +34,14 @@ class Serverscreen extends Screen {
         List<String> keywords = serverDetails.getServerKeywords();
         int i = 30;
 
-        Button reset = new Button(this.width / 2 - this.width / 4 - 50, i, 100, CLICKABLEWIDGETHEIGHT, new TranslatableComponent("rplog.config.serverscreen.reset_defaults"),
+        Button reset = new Button(this.width / 2 - this.width / 4 - 50, 13, 100, CLICKABLEWIDGETHEIGHT, new TranslatableComponent("rplog.config.serverscreen.reset_defaults"),
                 button ->{
                     serverConfig.getServerDetails().getServerKeywords().clear();
                     serverConfig.getServerDetails().getServerKeywords().addAll(DefaultConfig.defaultKeywords);
                     Minecraft.getInstance().setScreen(new Serverscreen(previous, serverConfig));
                 });
 
-        Button done = new Button(this.width / 2 + this.width / 4 - reset.getWidth() / 2 , i, reset.getWidth(), CLICKABLEWIDGETHEIGHT, new TranslatableComponent("rplog.config.screen.done"),
+        Button done = new Button(this.width / 2 + this.width / 4 - reset.getWidth() / 2 , 13, reset.getWidth(), CLICKABLEWIDGETHEIGHT, new TranslatableComponent("rplog.config.screen.done"),
                 button -> {
                     Forgerplog.CONFIG.saveConfig();
                     onClose();
@@ -51,8 +51,8 @@ class Serverscreen extends Screen {
         this.addRenderableWidget(done);
 
         for (String keyword : keywords) {
-            i = i + 30;
-            Button delete = new Button(this.width / 2 + this.width / 4 - reset.getWidth() / 2, i, reset.getWidth(), CLICKABLEWIDGETHEIGHT, new TranslatableComponent("rplog.config.screen.delete"),
+            i = i + 20;
+            Button delete = new Button(this.width / 2 + this.width / 4 - reset.getWidth() / 2, i -5 , reset.getWidth(), CLICKABLEWIDGETHEIGHT, new TranslatableComponent("rplog.config.screen.delete"),
                     button ->{
                         keywords.remove(keyword);
                         serverConfig.setServerDetails(serverDetails);
@@ -61,7 +61,7 @@ class Serverscreen extends Screen {
             this.addRenderableWidget(delete);
         }
 
-        i = i + 30;
+        i = i + 20;
         EditBox insert = new EditBox(this.font, this.width / 2 - this.width / 4 - 50, i, 100, CLICKABLEWIDGETHEIGHT, Component.nullToEmpty("")) {
 
         };
@@ -88,7 +88,7 @@ class Serverscreen extends Screen {
         List<String> keywords = serverConfig.getServerDetails().getServerKeywords();
         int i = 30;
         for(String keyword:keywords){
-            i = i + 30;
+            i = i + 20;
             drawCenteredString(poseStack, this.font, Component.nullToEmpty(keyword), this.width / 2 - this.width / 4 , i ,0xffffff);
         }
         super.render(poseStack, mouseX, mouseY, delta);

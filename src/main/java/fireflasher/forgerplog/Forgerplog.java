@@ -52,6 +52,6 @@ public class Forgerplog {
     private void setup(final FMLCommonSetupEvent event) {}
     private void doClientStuff(final FMLClientSetupEvent event){}
 
-    protected static String getFolder(){ return FMLPaths.GAMEDIR.get().toString() + "/RPLog/"; }
+    public static String getFolder(){ return FMLPaths.GAMEDIR.get().toString() + "/RPLog/"; }
     public static String getConfigFolder(){ return FMLPaths.CONFIGDIR.get().toString() + "/"; }
 }
