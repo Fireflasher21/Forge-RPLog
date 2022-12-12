@@ -2,6 +2,7 @@ buildscript {
     repositories {
         // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
         maven { url = 'https://maven.minecraftforge.net' }
+        maven { url = 'https://repo.spongepowered.org' }
         mavenCentral()
     }
     dependencies {
@@ -15,7 +16,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 
 group = 'fireflasher'
-version = '4.0'
+version = '4.2'
 
 compileJava.options.encoding = 'UTF-8'
 
@@ -150,7 +151,7 @@ dependencies {
 }
 
 mixin {
-    config 'mixins.guiButtonMixin.java'
+    config 'forgerplog.mixin.json'
 
 }
 
