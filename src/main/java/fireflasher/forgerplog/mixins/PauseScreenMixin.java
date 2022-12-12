@@ -26,6 +26,5 @@ public abstract class PauseScreenMixin extends Screen {
             Minecraft.getInstance().setScreen(new Optionsscreen(this));
         });
         addRenderableWidget(accessModOption);
-        Logger.getLogger("Debug").info("ModButton");
     }
 }
