@@ -10,7 +10,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.List;
 
@@ -34,14 +33,14 @@ class Serverscreen extends Screen {
         List<String> keywords = serverDetails.getServerKeywords();
         int i = 30;
 
-        Button reset = new Button(this.width / 2 - this.width / 4 - 50, 13, 100, CLICKABLEWIDGETHEIGHT, new TranslatableComponent("rplog.config.serverscreen.reset_defaults"),
+        Button reset = new Button(this.width / 2 - this.width / 4 - 50, 13, 100, CLICKABLEWIDGETHEIGHT, Component.translatable("rplog.config.serverscreen.reset_defaults"),
                 button ->{
                     serverConfig.getServerDetails().getServerKeywords().clear();
                     serverConfig.getServerDetails().getServerKeywords().addAll(DefaultConfig.defaultKeywords);
                     Minecraft.getInstance().setScreen(new Serverscreen(previous, serverConfig));
                 });
 
-        Button done = new Button(this.width / 2 + this.width / 4 - reset.getWidth() / 2 , 13, reset.getWidth(), CLICKABLEWIDGETHEIGHT, new TranslatableComponent("rplog.config.screen.done"),
+        Button done = new Button(this.width / 2 + this.width / 4 - reset.getWidth() / 2 , 13, reset.getWidth(), CLICKABLEWIDGETHEIGHT, Component.translatable("rplog.config.screen.done"),
                 button -> {
                     Forgerplog.CONFIG.saveConfig();
                     onClose();
@@ -52,7 +51,7 @@ class Serverscreen extends Screen {
 
         for (String keyword : keywords) {
             i = i + 20;
-            Button delete = new Button(this.width / 2 + this.width / 4 - reset.getWidth() / 2, i -5 , reset.getWidth(), CLICKABLEWIDGETHEIGHT, new TranslatableComponent("rplog.config.screen.delete"),
+            Button delete = new Button(this.width / 2 + this.width / 4 - reset.getWidth() / 2, i -5 , reset.getWidth(), CLICKABLEWIDGETHEIGHT, Component.translatable("rplog.config.screen.delete"),
                     button ->{
                         keywords.remove(keyword);
                         serverConfig.setServerDetails(serverDetails);
@@ -66,7 +65,7 @@ class Serverscreen extends Screen {
 
         };
 
-        Button add = new Button(this.width / 2 + this.width / 4 - insert.getWidth() / 2, i, insert.getWidth(), CLICKABLEWIDGETHEIGHT, new TranslatableComponent("rplog.config.serverscreen.add_Keywords"),
+        Button add = new Button(this.width / 2 + this.width / 4 - insert.getWidth() / 2, i, insert.getWidth(), CLICKABLEWIDGETHEIGHT, Component.translatable("rplog.config.serverscreen.add_Keywords"),
                 button ->{
 
                     if (!insert.getValue().isEmpty()) {

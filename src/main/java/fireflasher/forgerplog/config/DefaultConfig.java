@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import fireflasher.forgerplog.Forgerplog;
 import fireflasher.forgerplog.config.json.JsonConfig;
 import fireflasher.forgerplog.config.json.ServerConfig;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,7 +12,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class DefaultConfig {
@@ -30,7 +29,7 @@ public class DefaultConfig {
     public void setup() {
         this.ConfigFile = new File(ModsDir + "rplog.json");
         if (ConfigFile.exists()) {
-            LOGGER.info(new TranslatableComponent("rplog.logger.config").toString());
+            LOGGER.info(new TranslatableContents("rplog.logger.config").toString());
             loadConfig();
         } else {
             setConfigFile();
