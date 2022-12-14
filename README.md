@@ -14,3 +14,5 @@ In my Case it was Aegorin and all the people who make this Server what it is. To
 
 If you want to check out the Server here you go: https://Aegorin.de
 But keep in mind, that the Servers only language is German
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/A0A2H14AJ)
