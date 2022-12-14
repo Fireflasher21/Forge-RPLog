@@ -1,5 +1,6 @@
 package fireflasher.forgerplog.config.modmenu;
 
+import com.mojang.authlib.minecraft.client.MinecraftClient;
 import com.mojang.blaze3d.vertex.PoseStack;
 import fireflasher.forgerplog.ChatLogger;
 import fireflasher.forgerplog.Forgerplog;
@@ -13,7 +14,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
 
 import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Optionsscreen extends Screen {
 
@@ -63,14 +67,14 @@ public class Optionsscreen extends Screen {
 
         Button addServer = new Button(this.width / 2 - this.width / 4 - 50, 13, 100, BUTTON_HEIGHT, Component.translatable("rplog.config.optionscreen.add_Server"),
                 button ->{
-                    if (Minecraft.getInstance().getCurrentServer() == null || Minecraft.getInstance().getCurrentServer().isLan()) {
-                    } else {
-                        String ip1 = Minecraft.getInstance().getCurrentServer().ip;
-                        String servername1 = Minecraft.getInstance().getCurrentServer().name;
-                        String ip = ip1.split("/")[1];
-                        String servername = servername1.toString().split("/")[0];
-                        ip = ip.split(":")[0];
-                        defaultConfig.addServerToList(ip, servername);
+                    if (Minecraft.getInstance().getCurrentServer() != null || !Minecraft.getInstance().getCurrentServer().isLan()) {
+                        String[] ip = new String[2];
+                        ip[0] = Minecraft.getInstance().getCurrentServer().ip;
+                        ip[1] = Minecraft.getInstance().getCurrentServer().name;
+
+                        ip = ChatLogger.getIP(ip[0], ip[1]);
+
+                        defaultConfig.addServerToList(ip[0], ip[1]);
                         defaultConfig.loadConfig();
                         Minecraft.getInstance().setScreen(new Optionsscreen(previous));
                     }
