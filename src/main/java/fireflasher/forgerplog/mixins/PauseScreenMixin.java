@@ -11,8 +11,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.logging.Logger;
-
 @Mixin(PauseScreen.class)
 public abstract class PauseScreenMixin extends Screen {
 
@@ -22,7 +20,8 @@ public abstract class PauseScreenMixin extends Screen {
 
     @Inject(method = ("createPauseMenu"), at = @At("HEAD"))
     public void createPauseMenu(CallbackInfo callbackInfo){
-        Button accessModOption = new Button(0, 0, 35, 20, Component.nullToEmpty("RPL"), button -> {
+        Component rpl = Component.literal("RPL");
+        Button accessModOption = new Button(0, 0, 35, 20, rpl, button -> {
             Minecraft.getInstance().setScreen(new Optionsscreen(this));
         });
         addRenderableWidget(accessModOption);
