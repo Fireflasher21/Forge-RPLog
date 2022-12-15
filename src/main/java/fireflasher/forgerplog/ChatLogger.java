@@ -124,7 +124,6 @@ public class ChatLogger {
 
     private static void addMessage(String chat){
         String Path = Forgerplog.getFolder() + serverName;
-        LOGGER.warn("AddMessage: " + serverName);
         if(!log.toString().contains(LocalDateTime.now().format(DATE)) || !log.getPath().equalsIgnoreCase(Path)) {
             LocalDateTime today = LocalDateTime.now();
             String date = today.format(DATE);
@@ -132,7 +131,6 @@ public class ChatLogger {
             log = new File(Path, Filename);
             if(error)log = new File(Forgerplog.getFolder(), date + "-error.txt");
             if (!log.exists()) {
-                LOGGER.warn("Log FileTest");
                 try {
                     File path = new File(Path);
                     path.mkdir();
@@ -276,5 +274,4 @@ public class ChatLogger {
         sourceFolder.delete();
         return true;
     }
-
 }
