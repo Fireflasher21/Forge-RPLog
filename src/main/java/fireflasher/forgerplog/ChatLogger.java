@@ -1,14 +1,20 @@
 package fireflasher.forgerplog;
 
 
-import fireflasher.forgerplog.config.DefaultConfig;
 import fireflasher.forgerplog.config.json.ServerConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.status.ServerStatus;
+import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -16,6 +22,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -25,7 +32,7 @@ public class ChatLogger {
 
     public static Logger LOGGER = Forgerplog.LOGGER;
     private static String serverIP = "";
-    private static String serverName = "";
+    private static String serverName = "Local";
     public static final DateTimeFormatter DATE  = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     public static final DateTimeFormatter TIME  = DateTimeFormatter.ofPattern("HH:mm:ss");
     private static File log;
@@ -35,11 +42,14 @@ public class ChatLogger {
 
 
     @SubscribeEvent
-    public void ChatEvent(ClientChatReceivedEvent event){
-        String chat =  event.getMessage().getString();
+    public void ChatEvent(ClientChatEvent event){
+        String chat =  event.getMessage();
 
         if( Minecraft.getInstance().getCurrentServer() != null && !Minecraft.getInstance().getCurrentServer().isLan()) servercheck();
-        else channellist = DefaultConfig.defaultKeywords;
+        else{
+            serverName = "Local";
+            channellist = CONFIG.getKeywords();
+        }
 
         for(String Channel:channellist){
             if(chat.contains(Channel)){
@@ -50,38 +60,40 @@ public class ChatLogger {
     }
 
     public static void servercheck(){
-        String address =Minecraft.getInstance().getCurrentServer().toString();
-        String ip = address.split("/")[1];
-        ip = ip.split(":")[0];
+        String[] ipArray = new String[2];
+        String ip = Minecraft.getInstance().getCurrentServer().ip;
+        String serverNameTMP = Minecraft.getInstance().getCurrentServer().name;
+        ipArray = getIP(ip ,serverNameTMP);
 
-
-
-        ServerConfig serverConfig = CONFIG.getServerObject(ip);
+        ServerConfig serverConfig = CONFIG.getServerObject(ipArray[0]);
 
         if( serverConfig != null){
             channellist = serverConfig.getServerDetails().getServerKeywords();
-            if(!address.split("/")[0].contains(serverName) || serverName.equals("")) {
+            if(!ipArray[1].contains(serverName) || serverName.equals("")) {
                 serverName = getServerNameShortener(serverConfig.getServerDetails().getServerNames());
             }
         }
         else channellist = CONFIG.getKeywords();
-        serverIP = ip;
+        serverIP = ipArray[0];
     }
 
     public void setup() {
-
-        for(ServerConfig serverList: CONFIG.getList()){
+        String path = Forgerplog.getFolder();
+        if(!new File(path).exists())new File(path).mkdir();
+        log = new File(path + serverName, LocalDateTime.now().format(DATE) + ".txt");
+        for (ServerConfig serverList : CONFIG.getList()) {
+            organizeFolders(serverList);
 
             String server_name = getServerNameShortener(serverList.getServerDetails().getServerNames());
             String Path = Forgerplog.getFolder() + server_name;
-            log = new File(Path ,LocalDateTime.now().format(DATE) + ".txt");
+            log = new File(Path, LocalDateTime.now().format(DATE) + ".txt");
             File[] files = new File(Path).listFiles();
-            if(files == null){}
-            else {
+            if (files == null) {
+            } else {
                 for (File textfile : files) {
-                    if (textfile.toString().endsWith(".txt") && textfile.compareTo(log) != 0 ) {
+                    if (textfile.toString().endsWith(".txt") && textfile.compareTo(log) != 0) {
                         try {
-                            String filename  = textfile.toString().replaceFirst(".txt", ".zip");
+                            String filename = textfile.toString().replaceFirst(".txt", ".zip");
 
                             FileOutputStream fos = new FileOutputStream(filename);
                             ZipOutputStream zipOut = new ZipOutputStream(fos);
@@ -101,10 +113,9 @@ public class ChatLogger {
                             fis.close();
                             fos.close();
 
-                            if(new File(filename).exists()) fileToZip.delete();
-                        }
-                        catch (IOException e){
-                            LOGGER.warn("RPLOG Datei konnte nicht verpackt werden");
+                            if (new File(filename).exists()) fileToZip.delete();
+                        } catch (IOException e) {
+                            LOGGER.warn(new TranslatableComponent("rplog.logger.chatlogger.zip_warning"));
                         }
                     }
                 }
@@ -126,7 +137,7 @@ public class ChatLogger {
                     path.mkdir();
                     log.createNewFile();
                 } catch (IOException e) {
-                    LOGGER.warn("RPLOG Datei " + log.toString() + " konnte nicht erstellt werden");
+                    LOGGER.warn(new TranslatableComponent(("rplog.logger.chatlogger.creation_warning") + log.toString()));
                     error = true;
                 }
             }
@@ -148,7 +159,7 @@ public class ChatLogger {
             timedmessage = chat;
 
         } catch (IOException e) {
-            LOGGER.warn("RPLog konnte nicht in " + log.toString() + " schreiben");
+            LOGGER.warn(new TranslatableComponent(("rplog.logger.chatlogger.write_warning") + log.toString()));
         }
     }
 
@@ -173,4 +184,95 @@ public class ChatLogger {
         if(count > 1) name = name.split("\\.",2)[1];
         name = name.split("\\.")[0];
         return name;
-    }}
+    }
+
+
+    public static String[] getIP(String ip, String serverName){
+        String ip1 = ip;
+        int[] dotscount = new int[]{0,0};
+        while(ip.length() > dotscount[0]){  //Count dots for IP Check
+            if(ip.charAt(dotscount[0]) == '.') dotscount[1] ++;
+            dotscount[0] ++;
+        }
+        if(dotscount[1] < 3){   //Check if IP is IP or Name per dots in String
+            try {
+                InetAddress adress = InetAddress.getByName(ip);
+                ip = adress.getHostAddress();   //Get real ip per domain in String
+            } catch (UnknownHostException e) { throw new RuntimeException(e);}
+
+            if(dotscount[1] == 2) ip1 = ip1.split("\\.")[1];
+            else ip1 = ip1.split("\\.")[0];
+            serverName = ip1;   //Split Domain in Name
+        }
+        String[] serverIP = new String[]{ip, serverName};
+        return serverIP;
+    }
+
+    private boolean organizeFolders(ServerConfig serverConfig){
+        List<String> serverNameList = serverConfig.getServerDetails().getServerNames();
+        Pattern serverAddress = Pattern.compile("[A-z]{1,}");
+        for(String serverName: serverNameList){
+            if(serverAddress.matcher(serverName).find()) continue;
+
+            String path = Forgerplog.getFolder() + serverName;
+            File ipFolder = new File(path);
+
+            if(!ipFolder.exists())continue;
+
+            File[] ipFolderFiles = ipFolder.listFiles();
+            if(ipFolderFiles == null){
+                ipFolder.delete();
+                continue;
+            }
+
+            File newFolder = new File(Forgerplog.getFolder() + ChatLogger.getServerNameShortener(serverConfig.getServerDetails().getServerNames()));
+
+            if(newFolder.exists()) {
+                if(newFolder.listFiles().length == 0) {
+                    newFolder.delete();
+                    ipFolder.renameTo(newFolder);
+                }else {
+                    File[] newFolderFiles = newFolder.listFiles();
+                    if (newFolderFiles.length < ipFolderFiles.length){
+                        moveFiles(newFolder, ipFolder);
+                        ipFolder.renameTo(newFolder);
+                    }
+                    else moveFiles(ipFolder, newFolder);
+                }
+            }
+            else ipFolder.renameTo(newFolder);
+
+
+        }
+        return true;
+    }
+
+    private boolean moveFiles(File sourceFolder, File newFolder) {
+        List<Path> folderstodelete = new ArrayList<>();
+        try (Stream<Path> pathStream = Files.walk(sourceFolder.toPath())) {
+            pathStream.forEach(path1 -> {
+                String filename = path1.getFileName().toString();
+                if(filename.equals(sourceFolder.getName()));
+                else{
+                    try {
+                        if (Files.isRegularFile(path1))
+                            Files.move(path1, Path.of(newFolder + path1.toString().replace(sourceFolder.toString(),"")));
+                        if (Files.isDirectory(path1)) {
+                            Files.createDirectory(Path.of(newFolder + path1.toString().replace(sourceFolder.toString(),"")));
+                            folderstodelete.add(path1);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for (int i = folderstodelete.size() - 1; i > -1; i--  ) {
+            folderstodelete.get(i).toFile().delete();
+        }
+        sourceFolder.delete();
+        return true;
+    }
+}
