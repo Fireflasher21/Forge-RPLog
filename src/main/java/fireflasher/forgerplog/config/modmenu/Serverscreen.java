@@ -33,30 +33,30 @@ class Serverscreen extends Screen {
         List<String> keywords = serverDetails.getServerKeywords();
         int i = 30;
 
-        Button reset = new Button(this.width / 2 - this.width / 4 - 50, 13, 100, CLICKABLEWIDGETHEIGHT, Component.translatable("rplog.config.serverscreen.reset_defaults"),
+        Button reset = Button.builder(Component.translatable("rplog.config.serverscreen.reset_defaults"),
                 button ->{
                     serverConfig.getServerDetails().getServerKeywords().clear();
                     serverConfig.getServerDetails().getServerKeywords().addAll(DefaultConfig.defaultKeywords);
                     Minecraft.getInstance().setScreen(new Serverscreen(previous, serverConfig));
-                });
+                }).pos(this.width / 2 - this.width / 4 - 50, 13).width(100).build();
 
-        Button done = new Button(this.width / 2 + this.width / 4 - reset.getWidth() / 2 , 13, reset.getWidth(), CLICKABLEWIDGETHEIGHT, Component.translatable("rplog.config.screen.done"),
+        Button done = Button.builder(Component.translatable("rplog.config.screen.done"),
                 button -> {
                     Forgerplog.CONFIG.saveConfig();
                     onClose();
-                });
+                }).pos(this.width / 2 + this.width / 4 - reset.getWidth() / 2 , 13).width(reset.getWidth()).build();
 
         this.addRenderableWidget(reset);
         this.addRenderableWidget(done);
 
         for (String keyword : keywords) {
             i = i + 20;
-            Button delete = new Button(this.width / 2 + this.width / 4 - reset.getWidth() / 2, i -5 , reset.getWidth(), CLICKABLEWIDGETHEIGHT, Component.translatable("rplog.config.screen.delete"),
+            Button delete = Button.builder(Component.translatable("rplog.config.screen.delete"),
                     button ->{
                         keywords.remove(keyword);
                         serverConfig.setServerDetails(serverDetails);
                         Minecraft.getInstance().setScreen(new Serverscreen(previous, serverConfig));
-                    });
+                    }).pos(this.width / 2 + this.width / 4 - reset.getWidth() / 2, i -5).width(reset.getWidth()).build();
             this.addRenderableWidget(delete);
         }
 
@@ -65,7 +65,7 @@ class Serverscreen extends Screen {
 
         };
 
-        Button add = new Button(this.width / 2 + this.width / 4 - insert.getWidth() / 2, i, insert.getWidth(), CLICKABLEWIDGETHEIGHT, Component.translatable("rplog.config.serverscreen.add_Keywords"),
+        Button add = Button.builder(Component.translatable("rplog.config.serverscreen.add_Keywords"),
                 button ->{
 
                     if (!insert.getValue().isEmpty()) {
@@ -74,7 +74,7 @@ class Serverscreen extends Screen {
                         Minecraft.getInstance().setScreen(new Serverscreen(previous, serverConfig));
                     }
 
-                });
+                }).pos(this.width / 2 + this.width / 4 - insert.getWidth() / 2, i).width(insert.getWidth()).build();
 
         this.addRenderableWidget(insert);
         this.addRenderableWidget(add);

@@ -21,9 +21,9 @@ public abstract class PauseScreenMixin extends Screen {
     @Inject(method = ("createPauseMenu"), at = @At("HEAD"))
     public void createPauseMenu(CallbackInfo callbackInfo){
         Component rpl = Component.literal("RPL");
-        Button accessModOption = new Button(0, 0, 35, 20, rpl, button -> {
+        Button accessModOption = Button.builder(rpl, button -> {
             Minecraft.getInstance().setScreen(new Optionsscreen(this));
-        });
+        }).pos(0, 0).width(35).build();
         addRenderableWidget(accessModOption);
     }
 }

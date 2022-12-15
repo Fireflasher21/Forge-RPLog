@@ -1,6 +1,5 @@
 package fireflasher.forgerplog.config.modmenu;
 
-import com.mojang.authlib.minecraft.client.MinecraftClient;
 import com.mojang.blaze3d.vertex.PoseStack;
 import fireflasher.forgerplog.ChatLogger;
 import fireflasher.forgerplog.Forgerplog;
@@ -11,13 +10,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.contents.TranslatableContents;
 
 import java.io.File;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class Optionsscreen extends Screen {
 
@@ -47,16 +42,16 @@ public class Optionsscreen extends Screen {
         }
         for (ServerConfig server : serverConfigList) {
             i = i + 25;
-            Button serverbutton = new Button(this.width / 2 - this.width / 4 - 50, i, 100, BUTTON_HEIGHT, Component.nullToEmpty(ChatLogger.getServerNameShortener(server.getServerDetails().getServerNames())),
+            Button serverbutton = Button.builder(Component.nullToEmpty(ChatLogger.getServerNameShortener(server.getServerDetails().getServerNames())),
                     button -> {
                         Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, server));
-                    });
+                    }).pos(this.width / 2 - this.width / 4 - 50, i).width(100).build();
 
 
-            Button delete = new Button(this.width / 2 + this.width / 4 - serverbutton.getWidth() / 2, i, serverbutton.getWidth(), BUTTON_HEIGHT, Component.translatable("rplog.config.screen.delete"),
+            Button delete = Button.builder(Component.translatable("rplog.config.screen.delete"),
                     button -> {
                         Minecraft.getInstance().setScreen(new Verification(Minecraft.getInstance().screen, defaultConfig, server));
-                    });
+                    }).pos(this.width / 2 + this.width / 4 - serverbutton.getWidth() / 2, i).width(serverbutton.getWidth()).build();
 
             if (!serverConfigList.contains(dummy)) {
                 this.addRenderableWidget(serverbutton);
@@ -65,7 +60,7 @@ public class Optionsscreen extends Screen {
         }
         serverConfigList.remove(dummy);
 
-        Button addServer = new Button(this.width / 2 - this.width / 4 - 50, 13, 100, BUTTON_HEIGHT, Component.translatable("rplog.config.optionscreen.add_Server"),
+        Button addServer = Button.builder(Component.translatable("rplog.config.optionscreen.add_Server"),
                 button ->{
                     if (Minecraft.getInstance().getCurrentServer() != null || !Minecraft.getInstance().getCurrentServer().isLan()) {
                         String[] ip = new String[2];
@@ -78,24 +73,24 @@ public class Optionsscreen extends Screen {
                         defaultConfig.loadConfig();
                         Minecraft.getInstance().setScreen(new Optionsscreen(previous));
                     }
-                });
+                }).pos(this.width / 2 - this.width / 4 - 50, 13).width(100).build();
 
-        Button defaultconfigbutton = new Button(this.width / 2 + this.width / 4 - 50, 13, 100, BUTTON_HEIGHT, Component.translatable("rplog.config.screen.defaults"),
+        Button defaultconfigbutton = Button.builder(Component.translatable("rplog.config.screen.defaults"),
                 button ->{
                     ServerConfig defaults = new ServerConfig("Defaults",List.of("Defaults"),Forgerplog.CONFIG.getKeywords());
                     Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, defaults));
-                });
+                }).pos(this.width / 2 + this.width / 4 - 50, 13).width(100).build();
 
-        Button done = new Button(this.width / 2 + this.width / 4 - 50, this.height - 30, 100, BUTTON_HEIGHT, Component.translatable("rplog.config.screen.done"),
+        Button done = Button.builder(Component.translatable("rplog.config.screen.done"),
                 button -> {
                     onClose();
                     defaultConfig.loadConfig();
-                });
+                }).pos(this.width / 2 + this.width / 4 - 50, this.height - 30).width(100).build();
 
-        Button openFolder = new Button(this.width / 2 - this.width / 4 - 50, this.height - 30, 100, BUTTON_HEIGHT,  Component.translatable("rplog.config.optionscreen.open_LogFolder"),
+        Button openFolder = Button.builder(Component.translatable("rplog.config.optionscreen.open_LogFolder"),
                 button -> {
                         Util.getPlatform().openFile(new File(Forgerplog.getFolder()));
-                });
+                }).pos(this.width / 2 - this.width / 4 - 50, this.height - 30).width(100).build();
 
         this.addRenderableWidget(addServer);
         this.addRenderableWidget(done);
@@ -134,18 +129,18 @@ public class Optionsscreen extends Screen {
         }
 
         public void init(){
-            Button delete = new Button(this.width / 2 - this.width / 4 - 50, this.height / 2, 100, BUTTON_HEIGHT, Component.translatable("rplog.config.optionscreen.verification.delete"),
+            Button delete = Button.builder(Component.translatable("rplog.config.optionscreen.verification.delete"),
                     button -> {
                         defaultConfig.removeServerFromList(serverConfig);
                         Minecraft.getInstance().setScreen(new Optionsscreen(previous));
-                    });
+                    }).pos(this.width / 2 - this.width / 4 - 50, this.height / 2).width(100).build();
 
 
-            Button abort = new Button(this.width / 2 + this.width / 4 - 50, this.height / 2,100, BUTTON_HEIGHT, Component.translatable("rplog.config.optionscreen.verification.cancel"),
+            Button abort = Button.builder(Component.translatable("rplog.config.optionscreen.verification.cancel"),
                     button -> {
                         onClose();
 
-                    });
+                    }).pos(this.width / 2 + this.width / 4 - 50, this.height / 2).width(100).build();
 
             this.addRenderableWidget(delete);
             this.addRenderableWidget(abort);
