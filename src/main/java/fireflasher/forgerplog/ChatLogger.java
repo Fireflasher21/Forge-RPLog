@@ -5,6 +5,7 @@ import fireflasher.forgerplog.config.json.ServerConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.status.ServerStatus;
+import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.Logger;
@@ -41,17 +42,15 @@ public class ChatLogger {
 
 
     @SubscribeEvent
-    public static void ChatEvent(ClientChatReceivedEvent event){
-        LOGGER.warn(event);
-        String chat =  event.getMessage().getString();
-        LOGGER.warn("Chat: " + chat);
+    public void ChatEvent(ClientChatEvent event){
+        String chat =  event.getMessage();
+        LOGGER.warn("ChatReceivedEvent: " + chat);
 
         if( Minecraft.getInstance().getCurrentServer() != null && !Minecraft.getInstance().getCurrentServer().isLan()) servercheck();
         else{
             serverName = "Local";
             channellist = CONFIG.getKeywords();
         }
-        LOGGER.warn("TestLocal: " + serverName);
         for(String Channel:channellist){
             if(chat.contains(Channel)){
                 addMessage(chat);
