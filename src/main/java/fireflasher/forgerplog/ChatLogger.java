@@ -4,11 +4,15 @@ package fireflasher.forgerplog;
 import fireflasher.forgerplog.config.json.ServerConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.status.ServerStatus;
+import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -38,8 +42,8 @@ public class ChatLogger {
 
 
     @SubscribeEvent
-    public void ChatEvent(ClientChatReceivedEvent event){
-        String chat =  event.getMessage().getString();
+    public void ChatEvent(ClientChatEvent event){
+        String chat =  event.getMessage();
 
         if( Minecraft.getInstance().getCurrentServer() != null && !Minecraft.getInstance().getCurrentServer().isLan()) servercheck();
         else{
@@ -56,20 +60,21 @@ public class ChatLogger {
     }
 
     public static void servercheck(){
-        String address =Minecraft.getInstance().getCurrentServer().toString();
-        String ip = address.split("/")[1];
-        ip = ip.split(":")[0];
+        String[] ipArray = new String[2];
+        String ip = Minecraft.getInstance().getCurrentServer().ip;
+        String serverNameTMP = Minecraft.getInstance().getCurrentServer().name;
+        ipArray = getIP(ip ,serverNameTMP);
 
-        ServerConfig serverConfig = CONFIG.getServerObject(ip);
+        ServerConfig serverConfig = CONFIG.getServerObject(ipArray[0]);
 
         if( serverConfig != null){
             channellist = serverConfig.getServerDetails().getServerKeywords();
-            if(!address.split("/")[0].contains(serverName) || serverName.equals("")) {
+            if(!ipArray[1].contains(serverName) || serverName.equals("")) {
                 serverName = getServerNameShortener(serverConfig.getServerDetails().getServerNames());
             }
         }
         else channellist = CONFIG.getKeywords();
-        serverIP = ip;
+        serverIP = ipArray[0];
     }
 
     public void setup() {
@@ -179,6 +184,28 @@ public class ChatLogger {
         if(count > 1) name = name.split("\\.",2)[1];
         name = name.split("\\.")[0];
         return name;
+    }
+
+
+    public static String[] getIP(String ip, String serverName){
+        String ip1 = ip;
+        int[] dotscount = new int[]{0,0};
+        while(ip.length() > dotscount[0]){  //Count dots for IP Check
+            if(ip.charAt(dotscount[0]) == '.') dotscount[1] ++;
+            dotscount[0] ++;
+        }
+        if(dotscount[1] < 3){   //Check if IP is IP or Name per dots in String
+            try {
+                InetAddress adress = InetAddress.getByName(ip);
+                ip = adress.getHostAddress();   //Get real ip per domain in String
+            } catch (UnknownHostException e) { throw new RuntimeException(e);}
+
+            if(dotscount[1] == 2) ip1 = ip1.split("\\.")[1];
+            else ip1 = ip1.split("\\.")[0];
+            serverName = ip1;   //Split Domain in Name
+        }
+        String[] serverIP = new String[]{ip, serverName};
+        return serverIP;
     }
 
     private boolean organizeFolders(ServerConfig serverConfig){
