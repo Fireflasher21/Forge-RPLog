@@ -41,22 +41,22 @@ public class ChatLogger {
     private static boolean error;
 
 
-    @SubscribeEvent
-    public void ChatEvent(ClientChatEvent event){
+    public static void chatFilter(String chat){
+        /*
+        @SubscribeEvent
+        public static void ChatEvent(ChatEvent event)
         String chat =  event.getMessage();
-
+        */
         if( Minecraft.getInstance().getCurrentServer() != null && !Minecraft.getInstance().getCurrentServer().isLan()) servercheck();
         else{
             serverName = "Local";
             channellist = CONFIG.getKeywords();
         }
-
         for(String Channel:channellist){
             if(chat.contains(Channel)){
                 addMessage(chat);
             }
         }
-
     }
 
     public static void servercheck(){
@@ -69,11 +69,14 @@ public class ChatLogger {
 
         if( serverConfig != null){
             channellist = serverConfig.getServerDetails().getServerKeywords();
-            if(!ipArray[1].contains(serverName) || serverName.equals("")) {
+            if(!ipArray[1].contains(serverName) || serverName.equals("Local")) {
                 serverName = getServerNameShortener(serverConfig.getServerDetails().getServerNames());
             }
         }
-        else channellist = CONFIG.getKeywords();
+        else {
+            serverName = ipArray[1];
+            channellist = CONFIG.getKeywords();
+        }
         serverIP = ipArray[0];
     }
 
