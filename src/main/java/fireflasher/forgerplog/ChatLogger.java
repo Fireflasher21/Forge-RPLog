@@ -47,7 +47,6 @@ public class ChatLogger {
         public static void ChatEvent(ChatEvent event)
         String chat =  event.getMessage();
         */
-        LOGGER.warn("ChatEvent: " + chat);
 
         if( Minecraft.getInstance().getCurrentServer() != null && !Minecraft.getInstance().getCurrentServer().isLan()) servercheck();
         else{
