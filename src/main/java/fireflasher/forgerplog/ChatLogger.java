@@ -4,7 +4,6 @@ package fireflasher.forgerplog;
 import fireflasher.forgerplog.config.json.ServerConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.status.ServerStatus;
 import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -42,16 +41,17 @@ public class ChatLogger {
     private static boolean error;
 
 
-    @SubscribeEvent
-    public void ChatEvent(ClientChatEvent event){
+    public static void chatFilter(String chat){
+        /*
+        @SubscribeEvent
+        public static void ChatEvent(ChatEvent event)
         String chat =  event.getMessage();
-
+        */
         if( Minecraft.getInstance().getCurrentServer() != null && !Minecraft.getInstance().getCurrentServer().isLan()) servercheck();
         else{
             serverName = "Local";
             channellist = CONFIG.getKeywords();
         }
-
         for(String Channel:channellist){
             if(chat.contains(Channel)){
                 addMessage(chat);
@@ -64,17 +64,20 @@ public class ChatLogger {
         String[] ipArray = new String[2];
         String ip = Minecraft.getInstance().getCurrentServer().ip;
         String serverNameTMP = Minecraft.getInstance().getCurrentServer().name;
-        ipArray = getIP(ip ,serverNameTMP);
+        ipArray = getIP(ip, serverNameTMP);
 
         ServerConfig serverConfig = CONFIG.getServerObject(ipArray[0]);
 
         if( serverConfig != null){
             channellist = serverConfig.getServerDetails().getServerKeywords();
-            if(!ipArray[1].contains(serverName) || serverName.equals("")) {
+            if(!ipArray[1].contains(serverName) || serverName.equals("Local")) {
                 serverName = getServerNameShortener(serverConfig.getServerDetails().getServerNames());
             }
         }
-        else channellist = CONFIG.getKeywords();
+        else {
+            serverName = ipArray[1];
+            channellist = CONFIG.getKeywords();
+        }
         serverIP = ipArray[0];
     }
 
@@ -116,7 +119,7 @@ public class ChatLogger {
 
                             if (new File(filename).exists()) fileToZip.delete();
                         } catch (IOException e) {
-                            LOGGER.warn(new TranslatableComponent("rplog.logger.chatlogger.zip_warning"));
+                            LOGGER.warn(Component.translatable("rplog.logger.chatlogger.zip_warning"));
                         }
                     }
                 }
@@ -138,7 +141,7 @@ public class ChatLogger {
                     path.mkdir();
                     log.createNewFile();
                 } catch (IOException e) {
-                    LOGGER.warn(new TranslatableComponent(("rplog.logger.chatlogger.creation_warning") + log.toString()));
+                    LOGGER.warn(Component.translatable("rplog.logger.chatlogger.creation_warning") + log.toString());
                     error = true;
                 }
             }
@@ -160,7 +163,7 @@ public class ChatLogger {
             timedmessage = chat;
 
         } catch (IOException e) {
-            LOGGER.warn(new TranslatableComponent(("rplog.logger.chatlogger.write_warning") + log.toString()));
+            LOGGER.warn(Component.translatable("rplog.logger.chatlogger.write_warning") + log.toString());
         }
     }
 
