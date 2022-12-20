@@ -14,6 +14,6 @@ public abstract class ChatAccessMixin {
 
     @Inject(method = ("logChatMessage"), at = @At("HEAD"))
     public void logChatMessage(Component chat, GuiMessageTag tag, CallbackInfo ci){
-        ChatLogger.chatFilter(chat.getString());
+        ChatLogger.chatFilter(chat.getString().replaceAll("\r", "\\\\r").replaceAll("\n", "\\\\n"));
     }
 }
