@@ -36,7 +36,6 @@ public class Forgerplog {
         CHATLOGGER.setup();
 
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(CHATLOGGER);
 
 
         ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
