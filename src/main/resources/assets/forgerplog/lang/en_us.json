@@ -1,0 +1,22 @@
+{
+  "rplog.config.screen.done": "Done",
+  "rplog.config.screen.defaults": "Defaults",
+  "rplog.config.screen.delete":"Delete",
+  "rplog.config.optionscreen.title":"RPLog Options",
+  "rplog.config.optionscreen.add_Server":"Add Server",
+  "rplog.config.optionscreen.configuration_Servers":"Editable Servers",
+  "rplog.config.optionscreen.delete_Servers":"Delete Server",
+  "rplog.config.optionscreen.open_LogFolder": "Open Log Folder",
+  "rplog.config.optionscreen.verification.delete":"Yes",
+  "rplog.config.optionscreen.verification.cancel":"No",
+  "rplog.config.optionscreen.verification.message":"Are you sure you want to delete this Server?",
+
+  "rplog.config.serverscreen.reset_defaults":"Reset Defaults",
+  "rplog.config.serverscreen.add_Keywords":"Add",
+  "rplog.config.serverscreen.serverAdress":"ServerAdress",
+
+  "rplog.logger.config": "Config successfully loaded",
+  "rplog.logger.chatlogger.zip_warning": "Logfile couldnt be zipped",
+  "rplog.logger.chatlogger.creation_warning": "RPLog File couldnt be created: ",
+  "rplog.logger.chatlogger.write_warning": "RPLog File couldnt be written: "
+}

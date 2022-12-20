@@ -36,7 +36,6 @@ public class Forgerplog {
         CHATLOGGER.setup();
 
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(CHATLOGGER);
 
 
         ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
@@ -52,6 +51,6 @@ public class Forgerplog {
     private void setup(final FMLCommonSetupEvent event) {}
     private void doClientStuff(final FMLClientSetupEvent event){}
 
-    protected static String getFolder(){ return FMLPaths.GAMEDIR.get().toString() + "/RPLog/"; }
+    public static String getFolder(){ return FMLPaths.GAMEDIR.get().toString() + "/RPLog/"; }
     public static String getConfigFolder(){ return FMLPaths.CONFIGDIR.get().toString() + "/"; }
 }

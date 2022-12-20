@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.status.ServerStatus;
 import net.minecraftforge.client.event.ClientChatEvent;
+import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.Logger;
 
@@ -57,13 +58,14 @@ public class ChatLogger {
                 addMessage(chat);
             }
         }
+
     }
 
     public static void servercheck(){
         String[] ipArray = new String[2];
         String ip = Minecraft.getInstance().getCurrentServer().ip;
         String serverNameTMP = Minecraft.getInstance().getCurrentServer().name;
-        ipArray = getIP(ip ,serverNameTMP);
+        ipArray = getIP(ip, serverNameTMP);
 
         ServerConfig serverConfig = CONFIG.getServerObject(ipArray[0]);
 
@@ -140,7 +142,7 @@ public class ChatLogger {
                     path.mkdir();
                     log.createNewFile();
                 } catch (IOException e) {
-                    LOGGER.warn(new TranslatableComponent(("rplog.logger.chatlogger.creation_warning") + log.toString()));
+                    LOGGER.warn(new TranslatableComponent("rplog.logger.chatlogger.creation_warning") + log.toString());
                     error = true;
                 }
             }
@@ -162,7 +164,7 @@ public class ChatLogger {
             timedmessage = chat;
 
         } catch (IOException e) {
-            LOGGER.warn(new TranslatableComponent(("rplog.logger.chatlogger.write_warning") + log.toString()));
+            LOGGER.warn(new TranslatableComponent("rplog.logger.chatlogger.write_warning") + log.toString());
         }
     }
 
