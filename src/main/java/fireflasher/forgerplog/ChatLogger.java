@@ -71,11 +71,14 @@ public class ChatLogger {
 
         if( serverConfig != null){
             channellist = serverConfig.getServerDetails().getServerKeywords();
-            if(!ipArray[1].contains(serverName) || serverName.equals("")) {
+            if(!ipArray[1].contains(serverName) || serverName.equals("Local")) {
                 serverName = getServerNameShortener(serverConfig.getServerDetails().getServerNames());
             }
         }
-        else channellist = CONFIG.getKeywords();
+        else {
+            serverName = ipArray[1];
+            channellist = CONFIG.getKeywords();
+        }
         serverIP = ipArray[0];
     }
 
