@@ -67,7 +67,7 @@ public class Optionsscreen extends Screen {
 
         Button addServer = new Button(this.width / 2 - this.width / 4 - 50, 13, 100, BUTTON_HEIGHT, Component.translatable("rplog.config.optionscreen.add_Server"),
                 button ->{
-                    if (Minecraft.getInstance().getCurrentServer() != null || !Minecraft.getInstance().getCurrentServer().isLan()) {
+                    if (Minecraft.getInstance().getCurrentServer() != null && !Minecraft.getInstance().getCurrentServer().isLan()) {
                         String[] ip = new String[2];
                         ip[0] = Minecraft.getInstance().getCurrentServer().ip;
                         ip[1] = Minecraft.getInstance().getCurrentServer().name;
