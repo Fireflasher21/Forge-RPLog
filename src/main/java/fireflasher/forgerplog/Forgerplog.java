@@ -33,12 +33,9 @@ public class Forgerplog {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
         CHATLOGGER = new ChatLogger();
-
-        MinecraftForge.EVENT_BUS.register(CHATLOGGER);
-        MinecraftForge.EVENT_BUS.register(this);
-
         CHATLOGGER.setup();
 
+        MinecraftForge.EVENT_BUS.register(this);
 
 
         ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,

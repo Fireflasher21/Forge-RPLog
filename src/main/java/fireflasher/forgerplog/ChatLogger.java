@@ -41,10 +41,12 @@ public class ChatLogger {
     private static boolean error;
 
 
-    @SubscribeEvent
-    public void ChatEvent(ClientChatEvent event){
+    public static void chatFilter(String chat){
+        /*
+        @SubscribeEvent
+        public static void ChatEvent(ChatEvent event)
         String chat =  event.getMessage();
-        LOGGER.warn("ChatReceivedEvent: " + chat);
+        */
 
         if( Minecraft.getInstance().getCurrentServer() != null && !Minecraft.getInstance().getCurrentServer().isLan()) servercheck();
         else{
@@ -69,11 +71,14 @@ public class ChatLogger {
 
         if( serverConfig != null){
             channellist = serverConfig.getServerDetails().getServerKeywords();
-            if(!ipArray[1].contains(serverName) || serverName.equals("")) {
+            if(!ipArray[1].contains(serverName) || serverName.equals("Local")) {
                 serverName = getServerNameShortener(serverConfig.getServerDetails().getServerNames());
             }
         }
-        else channellist = CONFIG.getKeywords();
+        else {
+            serverName = ipArray[1];
+            channellist = CONFIG.getKeywords();
+        }
         serverIP = ipArray[0];
     }
 
@@ -125,7 +130,6 @@ public class ChatLogger {
 
     private static void addMessage(String chat){
         String Path = Forgerplog.getFolder() + serverName;
-        LOGGER.warn("AddMessage: " + serverName);
         if(!log.toString().contains(LocalDateTime.now().format(DATE)) || !log.getPath().equalsIgnoreCase(Path)) {
             LocalDateTime today = LocalDateTime.now();
             String date = today.format(DATE);
@@ -133,7 +137,6 @@ public class ChatLogger {
             log = new File(Path, Filename);
             if(error)log = new File(Forgerplog.getFolder(), date + "-error.txt");
             if (!log.exists()) {
-                LOGGER.warn("Log FileTest");
                 try {
                     File path = new File(Path);
                     path.mkdir();
@@ -277,5 +280,4 @@ public class ChatLogger {
         sourceFolder.delete();
         return true;
     }
-
 }

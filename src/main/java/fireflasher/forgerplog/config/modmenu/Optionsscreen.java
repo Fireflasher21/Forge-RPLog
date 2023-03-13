@@ -9,10 +9,13 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.chat.Component;
 
 import java.io.File;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Optionsscreen extends Screen {
 
@@ -62,7 +65,7 @@ public class Optionsscreen extends Screen {
 
         Button addServer = Button.builder(Component.translatable("rplog.config.optionscreen.add_Server"),
                 button ->{
-                    if (Minecraft.getInstance().getCurrentServer() != null || !Minecraft.getInstance().getCurrentServer().isLan()) {
+                    if (Minecraft.getInstance().getCurrentServer() != null && !Minecraft.getInstance().getCurrentServer().isLan()) {
                         String[] ip = new String[2];
                         ip[0] = Minecraft.getInstance().getCurrentServer().ip;
                         ip[1] = Minecraft.getInstance().getCurrentServer().name;
