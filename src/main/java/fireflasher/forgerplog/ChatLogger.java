@@ -3,12 +3,8 @@ package fireflasher.forgerplog;
 
 import fireflasher.forgerplog.config.json.ServerConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.network.protocol.status.ServerStatus;
-import net.minecraftforge.client.event.ClientChatEvent;
-import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
@@ -120,7 +116,7 @@ public class ChatLogger {
 
                             if (new File(filename).exists()) fileToZip.delete();
                         } catch (IOException e) {
-                            LOGGER.warn(new TranslatableComponent("rplog.logger.chatlogger.zip_warning"));
+                            LOGGER.warn(new TranslationTextComponent("rplog.logger.chatlogger.zip_warning"));
                         }
                     }
                 }
@@ -142,7 +138,7 @@ public class ChatLogger {
                     path.mkdir();
                     log.createNewFile();
                 } catch (IOException e) {
-                    LOGGER.warn(new TranslatableComponent("rplog.logger.chatlogger.creation_warning") + log.toString());
+                    LOGGER.warn(new TranslationTextComponent("rplog.logger.chatlogger.creation_warning") + log.toString());
                     error = true;
                 }
             }
@@ -164,7 +160,7 @@ public class ChatLogger {
             timedmessage = chat;
 
         } catch (IOException e) {
-            LOGGER.warn(new TranslatableComponent("rplog.logger.chatlogger.write_warning") + log.toString());
+            LOGGER.warn(new TranslationTextComponent(("rplog.logger.chatlogger.write_warning") + log.toString()));
         }
     }
 
@@ -273,6 +269,7 @@ public class ChatLogger {
             });
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
         for (int i = folderstodelete.size() - 1; i > -1; i--  ) {
             folderstodelete.get(i).toFile().delete();

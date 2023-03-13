@@ -1,28 +1,28 @@
 package fireflasher.forgerplog.config.modmenu;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import fireflasher.forgerplog.ChatLogger;
 import fireflasher.forgerplog.Forgerplog;
 import fireflasher.forgerplog.config.DefaultConfig;
 import fireflasher.forgerplog.config.json.ServerConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.List;
 
 
-class Serverscreen extends Screen {
+class Serverscreen extends Optionsscreen {
 
     private Screen previous;
     private ServerConfig serverConfig;
     static final int CLICKABLEWIDGETHEIGHT = 20;
 
     Serverscreen(Screen previous, ServerConfig serverConfig) {
-        super(Component.nullToEmpty(ChatLogger.getServerNameShortener(serverConfig.getServerDetails().getServerNames())));
+        super(previous, ChatLogger.getServerNameShortener(serverConfig.getServerDetails().getServerNames()));
         this.previous = previous;
         this.serverConfig = serverConfig;
     }
@@ -34,39 +34,39 @@ class Serverscreen extends Screen {
         List<String> keywords = serverDetails.getServerKeywords();
         int i = 30;
 
-        Button reset = new Button(this.width / 2 - this.width / 4 - 50, 13, 100, CLICKABLEWIDGETHEIGHT, new TranslatableComponent("rplog.config.serverscreen.reset_defaults"),
+        Button reset = new Button(this.width / 2 - this.width / 4 - 50, 13, 100, CLICKABLEWIDGETHEIGHT, new TranslationTextComponent("rplog.config.serverscreen.reset_defaults"),
                 button ->{
                     serverConfig.getServerDetails().getServerKeywords().clear();
                     serverConfig.getServerDetails().getServerKeywords().addAll(DefaultConfig.defaultKeywords);
                     Minecraft.getInstance().setScreen(new Serverscreen(previous, serverConfig));
                 });
 
-        Button done = new Button(this.width / 2 + this.width / 4 - reset.getWidth() / 2 , 13, reset.getWidth(), CLICKABLEWIDGETHEIGHT, new TranslatableComponent("rplog.config.screen.done"),
+        Button done = new Button(this.width / 2 + this.width / 4 - reset.getWidth() / 2 , 13, reset.getWidth(), CLICKABLEWIDGETHEIGHT, new TranslationTextComponent("rplog.config.screen.done"),
                 button -> {
                     Forgerplog.CONFIG.saveConfig();
                     onClose();
                 });
 
-        this.addRenderableWidget(reset);
-        this.addRenderableWidget(done);
+        this.addButton(reset);
+        this.addButton(done);
 
         for (String keyword : keywords) {
             i = i + 20;
-            Button delete = new Button(this.width / 2 + this.width / 4 - reset.getWidth() / 2, i -5 , reset.getWidth(), CLICKABLEWIDGETHEIGHT, new TranslatableComponent("rplog.config.screen.delete"),
+            Button delete = new Button(this.width / 2 + this.width / 4 - reset.getWidth() / 2, i -5 , reset.getWidth(), CLICKABLEWIDGETHEIGHT, new TranslationTextComponent("rplog.config.screen.delete"),
                     button ->{
                         keywords.remove(keyword);
                         serverConfig.setServerDetails(serverDetails);
                         Minecraft.getInstance().setScreen(new Serverscreen(previous, serverConfig));
                     });
-            this.addRenderableWidget(delete);
+            this.addButton(delete);
         }
 
         i = i + 20;
-        EditBox insert = new EditBox(this.font, this.width / 2 - this.width / 4 - 50, i, 100, CLICKABLEWIDGETHEIGHT, Component.nullToEmpty("")) {
+        TextFieldWidget insert = new TextFieldWidget(this.font, this.width / 2 - this.width / 4 - 50, i, 100, CLICKABLEWIDGETHEIGHT, ITextComponent.nullToEmpty("")) {
 
         };
 
-        Button add = new Button(this.width / 2 + this.width / 4 - insert.getWidth() / 2, i, insert.getWidth(), CLICKABLEWIDGETHEIGHT, new TranslatableComponent("rplog.config.serverscreen.add_Keywords"),
+        Button add = new Button(this.width / 2 + this.width / 4 - insert.getWidth() / 2, i, insert.getWidth(), CLICKABLEWIDGETHEIGHT, new TranslationTextComponent("rplog.config.serverscreen.add_Keywords"),
                 button ->{
 
                     if (!insert.getValue().isEmpty()) {
@@ -77,19 +77,19 @@ class Serverscreen extends Screen {
 
                 });
 
-        this.addRenderableWidget(insert);
-        this.addRenderableWidget(add);
+        this.addButton(insert);
+        this.addButton(add);
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
+    public void render(MatrixStack poseStack, int mouseX, int mouseY, float delta) {
         this.renderBackground(poseStack);
         drawCenteredString(poseStack, this.font, this.title, this.width / 2, 5, 0xffffff);
         List<String> keywords = serverConfig.getServerDetails().getServerKeywords();
         int i = 30;
         for(String keyword:keywords){
             i = i + 20;
-            drawCenteredString(poseStack, this.font, Component.nullToEmpty(keyword), this.width / 2 - this.width / 4 , i ,0xffffff);
+            drawCenteredString(poseStack, this.font, ITextComponent.nullToEmpty(keyword), this.width / 2 - this.width / 4 , i ,0xffffff);
         }
         super.render(poseStack, mouseX, mouseY, delta);
     }
