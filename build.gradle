@@ -21,7 +21,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 
 group = 'fireflasher'
-version = '4.2.1-1.17.1'
+version = '4.2.2-1.17.1'
 
 compileJava.options.encoding = 'UTF-8'
 
