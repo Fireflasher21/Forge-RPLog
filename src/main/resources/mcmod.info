@@ -3,7 +3,7 @@
   "name": "ForgeRPLog",
   "description": "A Chat Log Mod made for Aegorin User. Now for all",
   "version": "4.2.2",
-  "mcversion": "1.19.2",
+  "mcversion": "1.17.1",
   "logoFile": "assets/forgerplog/icon.png",
   "url": "modrinth.com/mod/rplog",
   "authorList": ["Fireflasher"]
