@@ -10,8 +10,10 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
+import java.awt.*;
 import java.util.List;
 
 
@@ -55,10 +57,11 @@ class Serverscreen extends Optionsscreen {
             Button delete = new Button(this.width / 2 + this.width / 4 - reset.getWidth() / 2, i -5 , reset.getWidth(), CLICKABLEWIDGETHEIGHT, new TranslationTextComponent("rplog.config.screen.delete"),
                     button ->{
                         keywords.remove(keyword);
-                        serverConfig.setServerDetails(serverDetails);
                         Minecraft.getInstance().setScreen(new Serverscreen(previous, serverConfig));
                     });
+            TextFieldWidget text = new TextFieldWidget(this.font, this.width / 2 - this.width / 4, i, reset.getWidth(), CLICKABLEWIDGETHEIGHT, new StringTextComponent(keyword));
             this.addButton(delete);
+            this.addWidget(text);
         }
 
         i = i + 20;
@@ -87,6 +90,7 @@ class Serverscreen extends Optionsscreen {
         drawCenteredString(poseStack, this.font, this.title, this.width / 2, 5, 0xffffff);
         List<String> keywords = serverConfig.getServerDetails().getServerKeywords();
         int i = 30;
+
         for(String keyword:keywords){
             i = i + 20;
             drawCenteredString(poseStack, this.font, ITextComponent.nullToEmpty(keyword), this.width / 2 - this.width / 4 , i ,0xffffff);
