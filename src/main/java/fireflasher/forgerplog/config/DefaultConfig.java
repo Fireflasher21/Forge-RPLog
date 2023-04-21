@@ -29,7 +29,7 @@ public class DefaultConfig {
     public void setup() {
         this.ConfigFile = new File(ModsDir + "rplog.json");
         if (ConfigFile.exists()) {
-            LOGGER.info(new TranslatableContents("rplog.logger.config").toString());
+            LOGGER.info("Config loaded");
             loadConfig();
         } else {
             setConfigFile();
