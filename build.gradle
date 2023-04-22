@@ -1,7 +1,3 @@
-import groovy.json.JsonSlurper
-import groovy.json.JsonBuilder
-import groovy.json.JsonOutput
-
 buildscript {
     repositories {
         // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
