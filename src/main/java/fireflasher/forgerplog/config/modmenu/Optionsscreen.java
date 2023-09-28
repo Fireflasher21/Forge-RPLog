@@ -7,7 +7,9 @@ import fireflasher.forgerplog.config.DefaultConfig;
 import fireflasher.forgerplog.config.json.ServerConfig;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.chat.Component;
@@ -101,15 +103,13 @@ public class Optionsscreen extends Screen {
         this.addRenderableWidget(openFolder);
     }
 
-
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         Component serverlist = Component.translatable("rplog.config.optionscreen.configuration_Servers");
         Component deleteServer = Component.translatable("rplog.config.optionscreen.delete_Servers");
-        this.renderBackground(poseStack);
-        drawCenteredString(poseStack,this.font, this.title, this.width / 2, 18, 0xffffff);
-        drawCenteredString(poseStack, this.font, serverlist, this.width / 2 - this.width / 4, 40, 0xffffff);
-        drawCenteredString(poseStack, this.font, deleteServer, this.width / 2 + this.width / 4, 40, 0xffffff);
-        super.render(poseStack, mouseX,mouseY,partialTicks);
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 18, 0xffffff);
+        guiGraphics.drawCenteredString(this.font, serverlist, this.width / 2 - this.width / 4, 40, 0xffffff);
+        guiGraphics.drawCenteredString(this.font, deleteServer, this.width / 2 + this.width / 4, 40, 0xffffff);
+        super.render(guiGraphics, mouseX,mouseY,partialTicks);
     }
 
     @Override
@@ -150,11 +150,11 @@ public class Optionsscreen extends Screen {
 
         }
 
-        public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
-            this.renderBackground(poseStack);
+        public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+            this.renderBackground(guiGraphics);
              Component server_delete_message = Component.translatable("rplog.config.optionscreen.verification.message");
-            drawCenteredString(poseStack, this.font, server_delete_message, this.width / 2, this.height / 2 - this.height / 4, 0xffffff);
-            super.render(poseStack, mouseX, mouseY, delta);
+            guiGraphics.drawCenteredString(this.font, server_delete_message, this.width / 2, this.height / 2 - this.height / 4, 0xffffff);
+            super.render(guiGraphics, mouseX, mouseY, delta);
         }
 
         @Override

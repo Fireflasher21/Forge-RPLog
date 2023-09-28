@@ -6,6 +6,7 @@ import fireflasher.forgerplog.Forgerplog;
 import fireflasher.forgerplog.config.DefaultConfig;
 import fireflasher.forgerplog.config.json.ServerConfig;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -81,16 +82,16 @@ class Serverscreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
-        this.renderBackground(poseStack);
-        drawCenteredString(poseStack, this.font, this.title, this.width / 2, 5, 0xffffff);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+        this.renderBackground(guiGraphics);
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 5, 0xffffff);
         List<String> keywords = serverConfig.getServerDetails().getServerKeywords();
         int i = 30;
         for(String keyword:keywords){
             i = i + 20;
-            drawCenteredString(poseStack, this.font, Component.nullToEmpty(keyword), this.width / 2 - this.width / 4 , i ,0xffffff);
+            guiGraphics.drawCenteredString(this.font, Component.nullToEmpty(keyword), this.width / 2 - this.width / 4 , i ,0xffffff);
         }
-        super.render(poseStack, mouseX, mouseY, delta);
+        super.render(guiGraphics, mouseX, mouseY, delta);
     }
 
     @Override
